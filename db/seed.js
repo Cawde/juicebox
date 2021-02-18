@@ -1,12 +1,8 @@
-// inside db/seed.js
-
 const {
   client,
-  getAllUsers, 
-  createUser
+  getAllUsers,
+  createUser,
 } = require('./index');
-
-
 
 async function dropTables() {
   try {
@@ -46,12 +42,12 @@ async function createInitialUsers() {
   try {
     console.log("Starting to create users...");
 
-    const albert = await createUser({ username: 'sandra', password: 'glamgal' });
-
-    console.log(albert);
+    await createUser({ username: 'albert', password: 'bertie99' });
+    await createUser({ username: 'sandra', password: '2sandy4me' });
+    await createUser({ username: 'glamgal', password: 'soglam' });
 
     console.log("Finished creating users!");
-  } catch(error) {
+  } catch (error) {
     console.error("Error creating users!");
     throw error;
   }
@@ -68,6 +64,7 @@ async function rebuildDB() {
     throw error;
   }
 }
+
 async function testDB() {
   try {
     console.log("Starting to test database...");
