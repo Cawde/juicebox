@@ -1,6 +1,7 @@
 const {  
   client,
   createUser,
+  createPost,
   updateUser,
   getAllUsers,
   getUserById,

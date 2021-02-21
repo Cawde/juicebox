@@ -5,6 +5,26 @@ const client = new Client('postgres://assane:Infrared28@localhost:5432/juicebox-
 /**
  * USER Methods
  */
+async function createPost({
+  authorId,
+  title,
+  content,
+  tags = []
+}) {
+  try {
+    const { rows: [ post ] } = await client.query(`
+      INSERT INTO posts("authorId", title, content) 
+      VALUES($1, $2, $3)
+      RETURNING *;
+    `, [authorId, title, content]);
+
+    const tagList = await createTags(tags);
+
+    return await addTagsToPost(post.id, tagList);
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function createUser({ 
   username, 
@@ -183,6 +203,13 @@ async function getPostById(postId) {
       WHERE id=$1;
     `, [postId]);
 
+    if (!post) {
+      throw {
+        name: "PostNotFoundError",
+        message: "Could not find a post with that postId"
+      };
+    }
+
     const { rows: tags } = await client.query(`
       SELECT tags.*
       FROM tags
@@ -337,6 +364,8 @@ async function getUserByUsername(username) {
 
 module.exports = {  
   client,
+  getPostById,
+  createPost,
   createUser,
   updateUser,
   getAllUsers,
